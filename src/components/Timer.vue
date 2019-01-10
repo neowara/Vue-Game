@@ -32,6 +32,7 @@ export default {
       this.isRunning = true
       if (!this.timer) {
           this.timer = setInterval( () => {
+            
             if (this.time > 0) {
               this.time--
               this.barTime = this.barTime - (100/this.barTimer)
@@ -39,7 +40,7 @@ export default {
               this.sound.play()
               clearInterval(this.timer)
               this.reset()
-            
+
             }
         }, 1000 )
       }

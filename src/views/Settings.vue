@@ -34,7 +34,9 @@ export default {
         activeButton: 0,
         categoryButton: 0,
         choosenBot: 0,
-        optionsSelected: false
+        optionsSelected: false,
+        maxGuess: 0,
+        minGuess: 0
 
       }
   },
@@ -82,11 +84,11 @@ export default {
     selectedBot: function(oppo) {
 
       if (oppo === 'easy') {
-        this.$store.state.choosenBot = "Glenn's";
+        this.$store.state.choosenBot = 1;
       } else if (oppo === 'medium') {
-        this.$store.state.choosenBot = "Håkan's";
+        this.$store.state.choosenBot = 2;
       }else {
-        this.$store.state.choosenBot = "Miriam's";
+        this.$store.state.choosenBot = 3;
     }
     console.log(this.$store.state.choosenBot);
 
