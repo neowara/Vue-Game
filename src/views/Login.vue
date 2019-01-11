@@ -36,7 +36,7 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then(
           user => {
-            this.$router.replace("highscore");
+            this.$router.replace("home");
           },
           err => {
             this.flash('Incorrect email or password', 'error', {
