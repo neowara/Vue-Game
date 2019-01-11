@@ -200,6 +200,7 @@ export default {
         //when bot wins
         this.$store.state.winner = true;
         this.$store.state.botWins = false;
+        this.$store.state.timerIsOut = false;
         this.show = false;
         this.stop();
         this.$router.push({ path: 'Winner' });
