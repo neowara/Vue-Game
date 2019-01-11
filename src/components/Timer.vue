@@ -62,7 +62,7 @@ export default {
 </script>
 <style scoped>
   html {
-    box-sizing:border-box;
+
   }
   p {
     z-index: 3;
@@ -71,11 +71,11 @@ export default {
     right: 0;
     margin: auto;
     position: absolute;
-    margin-top: -9px;
+    margin-top: -5px;
   }
   .timeBar {
     width: 200px;
-    height: 40px;
+    height: 50px;
     background-color: #eee;
     margin: auto;
     transition: width 1000ms;
