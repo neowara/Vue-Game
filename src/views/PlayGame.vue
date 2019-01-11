@@ -106,6 +106,7 @@ export default {
       this.$refs.focused.focus();
     },
     storeData() {
+      console.log(this.sessionScore);
       this.$firebaseRefs.allUsers.child(this.uid).update({
       newPoint: parseInt(this.oldScore) + parseInt(10)});
     },
@@ -194,16 +195,25 @@ export default {
         });
         input.value = "";
       }
-      else if (this.value == this.$store.state.theAnswer){
+      else if (this.value == this.$store.state.theAnswer && this.user){
         this.$store.state.numOfGuesses++;
         this.playersTurn = false;
-        //when bot wins
+        this.storeData()
         this.$store.state.winner = true;
         this.$store.state.botWins = false;
         this.show = false;
         this.stop();
         this.$router.push({ path: 'Winner' });
-      } 
+      }
+      else {
+        this.$store.state.numOfGuesses++;
+        this.playersTurn = false;
+        this.$store.state.winner = true;
+        this.$store.state.botWins = false;
+        this.show = false;
+        this.stop();
+        this.$router.push({ path: 'Winner' });
+      }
     },
       OnlyNumbers(e) {
       var keyCode = e.which;
@@ -236,6 +246,7 @@ export default {
     beforeDestroy: function() {
       this.stop();
       this.calculateScore();
+
     },beforeMount: function() {
       if (this.theQuestion == "") {
       this.$router.push({ path: 'Home' })
@@ -243,4 +254,3 @@ export default {
     }
   };
 </script>
-
