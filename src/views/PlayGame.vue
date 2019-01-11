@@ -1,31 +1,35 @@
-<template>  
-  <div id ="content">  
+<template>
+  <div id ="content">
     <h1>{{theQuestion}}</h1>
-    <input id="guess" class="field" @input="newValue" type="number" ref ="focused" autofocus="this.value=''" v-on:keypress.enter = "makeGuess"  v-on:keypress = "OnlyNumbers"/>
+    <input :maxlength="4" placeholder="Try your luck!" id="guess" class="field" @input="newValue"
+    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number"  ref ="focused" autofocus="this.value=''" v-on:keypress.enter = "makeGuess"  v-on:keypress = "OnlyNumbers"/>
     <button class="guessbutton" @click="makeGuess">Make a guess</button>
-    <p id="errormess" style="color: orangered; display: none">Only numbers! </p>
+    <p id="errormess" style="color: orangered; display: none"><br>Only numbers! </p>
     <p id="playerTurn" v-show="playersTurn">Your turn! </p>
-    <p id="botTurn" v-show="!playersTurn">Bot turn! </p>
+    <p id="botTurn" v-show="!playersTurn">Bot's turn! </p>
+    <p id="guessHigher" v-visible="guessHigher">Guess higher!</p>
+    <p id="guessLower" v-visible="guessLower">Guess lower! </p>
+
     <Timer v-show="show" ref="form"/>
     <div class="botText">
-      <p class="specifikBot">My guess: {{value}}</p>
-      <p class="specifikBot" id="bot"> Bot guess: {{bot}} </p>
+      <p class="specifikBot">My guess: <br>{{value}}</p>
+      <p class="specifikBot" id="bot"> {{choosenBot}} guess: <br>{{bot}} </p>
     </div>
-    <flash-message class="myCustomClass"></flash-message>
     <br>
   </div>
 </template>
 
 
 <script>
-import Timer from '@/components/Timer.vue'
-import {db, fb} from '../firebase-config'
+import Timer from '@/components/Timer.vue';
+import {db, fb} from '../firebase-config';
 import Vue from 'vue';
 import VueFlashMessage from 'vue-flash-message';
 import { timeout } from 'q';
 import { functions } from 'firebase';
+import VueVisible from 'vue-visible';
+Vue.use(VueVisible);
 Vue.use(VueFlashMessage);
-require('vue-flash-message/dist/vue-flash-message.min.css');
 
 
 export default {
@@ -37,10 +41,9 @@ export default {
       botGuesses: [],
       highLow: '',
       userGuess: 0,
-      maxGuess: 0,
-      minGuess: 0,
-      show: true,
       playersTurn: true,
+      guessHigher: false,
+      guessLower: false
     }
   },
   firebase: {
@@ -83,10 +86,19 @@ export default {
     },
     choosenBot() {
       return this.$store.state.choosenBot;
+    },
+    maxGuess() {
+      return this.$store.state.maxGuess;
+    },
+    minGuess() {
+      return this.$store.state.minGuess;
+    },
+     sessionScore() {
+       return this.$store.state.sessionScore;
     }
   },
   created () {
-    this.$bindAsObject('allUsers', db.ref('allUsers/'))
+    this.$bindAsObject('allUsers', db.ref('allUsers/'));
   },
   methods: {
     setFocus()
@@ -109,35 +121,52 @@ export default {
     newValue(event) {
       this.$store.dispatch('newValue', event.target.value)
     },
-    decideMinMax: function () {
-      var Min = 0;
-      if (this.$store.state.choosenBot == "Glenn's") {
-        Min = Math.floor(Math.random() * (50 - 1 + 1)) + 1;
-      } else if (this.$store.state.choosenBot == "Håkan's") {
-        Min = Math.floor(Math.random() * (30 - 1 + 1)) + 1;
+    decideMinMax() {
+      if (this.$store.state.choosenBot == "Glenn") {
+        this.$store.commit('updateMin', 6);
+        this.$store.commit('updateMax', 30);
+      } else if (this.$store.state.choosenBot == "Håkan") {
+        this.$store.commit('updateMin', 6);
+        this.$store.commit('updateMax', 15);
       } else {
-      this.$store.state.theAnswer;
+        this.$store.commit('updateMin', 2);
+        this.$store.commit('updateMax', 6);
     }
-    console.log(Min);
-
     },
-    ranNumBot(min, max) {
-        min = this.$store.state.theAnswer - Math.ceil(min);
-        max = Math.floor(max) + this.$store.state.theAnswer;
-       this.disableInput();
+    calculateScore() {
+        if (this.$store.state.choosenBot == "Glenn" && this.$store.state.winner == true) {
+          this.$store.commit('updateSessionScore', Math.floor((this.$store.state.numOfGuesses * 2) + 10));
+        } else if (this.$store.state.choosenBot == "Håkan" && this.$store.state.winner == true) {
+          this.$store.commit('updateSessionScore', Math.floor((this.$store.state.numOfGuesses * 3) + 20));
+        } else if (this.$store.state.choosenBot == "Miriam" && this.$store.state.winner == true){
+           this.$store.commit('updateSessionScore', Math.floor((this.$store.state.numOfGuesses * 4) + 30));
+        }
+    },
+    ranNumBot() {
+        var min = this.$store.state.theAnswer - this.minGuess;
+        var max = this.$store.state.theAnswer + this.maxGuess;
         var rng = Math.floor(Math.random() * (max - min)) + min;
-        if (this.botGuesses.includes(rng) !== true) {
-                this.botGuesses.push(rng);
-                this.$store.state.bot = rng;
-                console.log(rng + " pushed in");
-            } else {
-              console.log(rng + " already inside");
-              console.log(this.botGuesses);
-              this.ranNumBot(min, max);
-            }
+        this.disableInput();
+        if (rng !== this.$store.state.theAnswer) {
+          if (this.botGuesses.includes(rng) !== true ) {
+            this.botGuesses.push(rng);
+            this.$store.state.bot = rng;
+        } else {
+          if (this.botGuesses.length !== (max - min)) {
+            this.ranNumBot();
+          }
+        }
+        } else {
+          this.playersTurn = false;
+          this.$store.state.winner = false;
+          this.$store.state.botWins = true;
+          this.$store.state.timerIsOut = false;
+          this.stop();
+          this.$router.push({ path: 'Winner' });
+        }
     },
     makeGuess(value, number, bot) {
-      this.ranNumBot(this.$store.state.theAnswer,100);
+      this.ranNumBot();
       this.stopDisable();
       var input = document.getElementById("guess");
       if(this.value < this.$store.state.theAnswer){
@@ -145,7 +174,8 @@ export default {
         this.playersTurn = false;
         this.stop();
         this.reset();
-        this.flash('Higher', 'error', {
+        this.guessHigher = true;
+        this.flash('Guess Higher', 'error', {
           timeout: 2000,
           important: true
         });
@@ -157,30 +187,23 @@ export default {
         this.stop();
         this.reset();
         this.start();
-        this.flash('Lower', 'error', {
+        this.guessLower = true;
+        this.flash('Guess Lower', 'error', {
           timeout: 2000,
           important: true
         });
         input.value = "";
       }
-      else if (this.value == this.$store.state.theAnswer && this.user){
+      else if (this.value == this.$store.state.theAnswer){
         this.$store.state.numOfGuesses++;
         this.playersTurn = false;
         //when bot wins
         this.$store.state.winner = true;
+        this.$store.state.botWins = false;
         this.show = false;
         this.stop();
-        this.storeData();
-        this.$router.push({ path: 'winner' });
-      }
-      else {
-        this.$store.state.numOfGuesses++;
-        //when bot wins
-        this.$store.state.winner = true;
-        this.show = false;
-        this.stop();
-        this.$router.push({ path: 'winner' });
-      }
+        this.$router.push({ path: 'Winner' });
+      } 
     },
       OnlyNumbers(e) {
       var keyCode = e.which;
@@ -194,33 +217,30 @@ export default {
         }, 0);
      },
      stopDisable() {
-       setTimeout(() => {
+       if (this.$store.state.bot !== this.$store.state.theAnswer) {
+         setTimeout(() => {
          document.getElementById("guess").disabled = false;
           this.playersTurn = true;
           this.reset();
           this.start();
           this.setFocus();
+          this.guessHigher = false;
+          this.guessLower = false;
        }, 2500);
+       }
      }
+    },
+    mounted: function() {
+      this.decideMinMax();
+    },
+    beforeDestroy: function() {
+      this.stop();
+      this.calculateScore();
+    },beforeMount: function() {
+      if (this.theQuestion == "") {
+      this.$router.push({ path: 'Home' })
+      };
     }
   };
 </script>
 
-<style scoped>
-.botText {
-    display: flex;
-    justify-content: space-between;
-    margin: 1rem;
-}
-.specifikBot {
-  border: 3px solid lavender;
-  border-radius: 15px;
-  padding: 15px;
-  background: white;
-  color: RoyalBlue;
-}
-
-#bot {
-  color: DodgerBlue;
-}
-</style>
