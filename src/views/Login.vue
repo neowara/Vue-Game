@@ -8,9 +8,11 @@
         <input type="password" v-model="password" placeholder="Password">
         <br>
         <button class="buttonsubmit" @click="login">Submit</button>
+        <flash-message class="myCustomClass2"></flash-message>
         <p>You don't have an account yet? You can create one
         <router-link to="/sign-up">here</router-link>
         </p>
+
       </div>
     </div>
   </div>
@@ -37,7 +39,9 @@ export default {
             this.$router.replace("highscore");
           },
           err => {
-            alert("Whops, something wrong happend!" + err.message);
+            this.flash('Incorrect email or password', 'error', {
+              important: false
+            });
           }
         );
     }
