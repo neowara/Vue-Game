@@ -27,7 +27,7 @@ export default {
         .then(() => {
           this.$router.push({path: '/'});
         });
-    }, 
+    },
     togglePlay() {
     var audio = document.getElementById("player");
     if (audio.paused) {
@@ -171,12 +171,12 @@ h4 {
 }
 
 .startgamebutton {
-  background-color: deepskyblue;
+  background-color: #02b771;
   font-size: 30px;
   color: white;
   padding: 10px 40px 10px 40px;
   font-family: 'Pattaya', sans-serif;
-  border: 1px solid deepskyblue;
+  border: 1px solid #02b771;
   cursor: pointer;
   border-radius: 20px;
   outline: 0;
@@ -209,7 +209,7 @@ h4 {
   margin: 5px;
   color: white;
   padding: 10px;
-  font-family: 'Pattaya', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   border-radius: 20px;
   border: 1px solid deepskyblue;
@@ -240,10 +240,10 @@ h4 {
   transition: 0.4s;
 }
 .gamebutton {
-  background-color: deepskyblue;
+  background-color: #02b771;
   font-size: 25px;
   border-radius: 20px;
-  border: 1px solid deepskyblue;
+  border: 1px solid #02b771;
   margin-left: 10px;
   color: white;
   padding: 5px 17px 5px 17px;
@@ -279,15 +279,15 @@ h4 {
   border: 1px solid mediumspringgreen;
 }
 .navbutton {
-  
-  background-color: deepskyblue;
+
+  background-color: #02b771;
   font-size:1.2em;
   border-radius: 20px;
-  border: 1px solid deepskyblue;
+  border: 1px solid #02b771;
   margin-left: 10px;
   color: white;
   padding: 5px 17px 5px 17px;
-  font-family: 'Pattaya', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   cursor: pointer;
   margin: 0px 10px 10px 0px;
@@ -367,6 +367,7 @@ input[type=email], input[type=password], input[type=text] {
   border: 1px solid cornflowerblue;
   -moz-appearance:textfield;
   -webkit-appearance:textfield;
+  border-radius: 10px;
 
   }
 
@@ -388,7 +389,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 
 #content h1 {
-  font-family: 'Pattaya', sans-serif;
+  font-family: 'Poppins', sans-serif;
   margin-bottom: 20px;
 }
 
@@ -424,6 +425,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 width: 95%;
 margin-top: 5px;
 margin-bottom: 0px;
+}
+
+h1 {
+  font-size: 30px;
 }
 
   #highscore {

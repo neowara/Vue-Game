@@ -39,7 +39,7 @@ export default {
             this.$router.replace("home");
           },
           err => {
-            this.flash('Incorrect email or password', 'error', {
+            this.flash('* Incorrect email or password', 'error', {
               important: false
             });
           }
@@ -48,3 +48,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+  .myCustomClass2{
+    color: salmon;
+  }
+  </style>

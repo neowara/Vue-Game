@@ -1,12 +1,12 @@
 <template>
   <div id ="content">
     <h1>{{theQuestion}}</h1>
-    <input :maxlength="4" placeholder="Try your luck!" id="guess" class="field" @input="newValue"
+    <input :maxlength="4" id="guess" class="field" @input="newValue"
     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number"  ref ="focused" autofocus="this.value=''" v-on:keypress.enter = "makeGuess"  v-on:keypress = "OnlyNumbers"/>
     <button class="guessbutton" @click="makeGuess">Make a guess</button>
     <p id="errormess" style="color: orangered; display: none"><br>Only numbers! </p>
     <p id="playerTurn" v-show="playersTurn">Your turn! </p>
-    <p id="botTurn" v-show="!playersTurn">Bot's turn! </p>
+    <p id="botTurn" v-show="!playersTurn">{{choosenBot}}'s turn! </p>
     <p id="guessHigher" v-visible="guessHigher">Guess higher!</p>
     <p id="guessLower" v-visible="guessLower">Guess lower! </p>
 
@@ -204,7 +204,7 @@ export default {
         this.show = false;
         this.stop();
         this.$router.push({ path: 'Winner' });
-      } 
+      }
     },
       OnlyNumbers(e) {
       var keyCode = e.which;
@@ -244,4 +244,3 @@ export default {
     }
   };
 </script>
-
