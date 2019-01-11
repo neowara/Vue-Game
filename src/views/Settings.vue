@@ -44,12 +44,12 @@ export default {
       for (var i = 0; i< 7; i++){
         if (this.activeButton == i){
           result.push({
-            opponentSelected: '2px deepskyblue solid'
+            opponentSelected: '5px #02b771 solid'
 
             });
         } else if ( this.categoryButton == i){
           result.push({
-            categorySelected: '2px deepskyblue solid'
+            categorySelected: '5px #02b771 solid'
             });
         } else {
           result.push({
