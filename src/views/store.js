@@ -16,7 +16,9 @@ export default new Vuex.Store({
       num: 0,
       choosenBot: "",
       maxGuess: 0,
-      minGuess: 0
+      minGuess: 0,
+      botWins: false,
+      timerIsOut: false
   },
   getters: {
     value: state => {
@@ -27,10 +29,10 @@ export default new Vuex.Store({
     newValue: (state, payload) => {
       state.value = payload;
     },
-    updateMax: (state, amount) => {   
+    updateMax: (state, amount) => {
       state.maxGuess = amount
     },
-    updateMin: (state, amount) =>
+    updateMin: (state, amount) => 
     state.minGuess = amount
   },
   actions: {
