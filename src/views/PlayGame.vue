@@ -198,7 +198,7 @@ export default {
       else if (this.value == this.$store.state.theAnswer && this.user){
         this.$store.state.numOfGuesses++;
         this.playersTurn = false;
-        this.storeData()
+        this.storeData();
         this.$store.state.winner = true;
         this.$store.state.botWins = false;
         this.$store.state.timerIsOut = false;

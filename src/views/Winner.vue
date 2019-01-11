@@ -14,7 +14,7 @@
       </h2>
       <p v-show="botWins">{{choosenBot}} gave the correct answer.</p>
       <p v-show="timerIsOut">The timer ran out!</p>
-      <p>Your score: {{this.sessionScore}}</p>
+      <p v-show="winner">Your score: 10</p>
       <p>Correct answer is: {{this.$store.state.theAnswer}}</p>
       <p>Number of guesses: {{this.$store.state.numOfGuesses}}</p>
       <router-link to="/settings"><button class="gamebutton">Play again</button></router-link>
